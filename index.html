@@ -1,0 +1,50 @@
+html<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Hero Academia Fan Space</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Fixed Google Fonts connection for anime headline typography -->
+    <link href="https://googleapis.com" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ==========================================================================
+         PORTAL STAGE (Shows first, handles registration entry)
+         ========================================================================== -->
+    <div id="login-modal" class="portal-overlay-screen">
+        <div class="modal-box">
+            <h2 class="modal-title">U.A. HIGH PORTAL</h2>
+            <form id="login-form" onsubmit="submitLogin(event)">
+                <div class="input-group">
+                    <label>Hero Username</label>
+                    <input id="user-input-field" type="text" required placeholder="e.g., DekuFan99">
+                </div>
+                <div class="input-group">
+                    <label>Access Password</label>
+                    <input type="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="modal-submit-btn">Authorize Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Navigation Script -->
+    <script>
+        // Form Submission System: Moves completely to profile 2.html
+        function submitLogin(event) {
+            event.preventDefault(); // Keep page from flashing/refreshing
+            
+            // Instantly extract whatever username you typed in
+            var enteredName = document.getElementById("user-input-field").value;
+            
+            // Show alert feedback window
+            alert("Authentication Successful! Welcome, " + enteredName + ". Redirecting to U.A. Files...");
+            
+            // Automatically jump straight to your custom profile 2 page
+            window.location.href = "./profile 2.html";
+        }
+    </script>
+</body>
+</html>

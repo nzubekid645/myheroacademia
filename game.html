@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U.A. Arena - Showdown vs All For One</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ffcc00;
+            --secondary: #002b49;
+            --accent: #e53935;
+            --dark-bg: #121214;
+            --card-bg: #1e1e24;
+            --text-light: #ffffff;
+            --text-muted: #b3b3b3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* --- Header Navigation --- */
+        header {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 4px solid var(--primary);
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-family: 'Bangers', cursive;
+            font-size: 2.2rem;
+            color: var(--text-light);
+            letter-spacing: 1px;
+        }
+
+        header h1 span { color: var(--primary); }
+
+        .back-btn {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 2px solid var(--accent);
+            background-color: var(--accent);
+            padding: 8px 18px;
+            border-radius: 4px;
+            box-shadow: 3px 3px 0px var(--primary);
+            transition: transform 0.1s;
+        }
+
+        .back-btn:hover {
+            transform: translate(-2px, -2px);
+        }
+
+        /* --- Main Layout Frame Panels --- */
+        .game-wrapper {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* --- Character Selector Interface Grid --- */
+        .selection-screen {
+            background-color: var(--card-bg);
+            border: 3px solid var(--primary);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .section-headline {
+            font-family: 'Bangers', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .char-cluster-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+        }
+
+        .selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .char-select-btn {
+            background-color: #121214;
+            color: #fff;
+            border: 2px solid #333;
+            border-radius: 6px;
+            padding: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .char-select-btn:hover {
+            border-color: var(--primary);
+            background-color: #25252b;
+        }
+
+        /* --- Battle Arena Stage Interface --- */
+        .battle-arena {
+            background-color: var(--card-bg);
+            border: 3px solid var(--primary);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .arena-header {
+            font-family: 'Bangers', cursive;
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 0px var(--accent);
+        }
+
+        .combat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .fighter-card {
+            background-color: #121214;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .fighter-avatar {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .fighter-title {
+            font-family: 'Bangers', cursive;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .hp-meter-container {
+            background-color: #222;
+            height: 16px;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #444;
+            margin-bottom: 8px;
+        }
+
+        .hp-fill-bar {
+            height: 100%;
+            width: 100%;
+            background-color: #4caf50;
+            transition: width 0.3s ease;
+        }
+
+        .hp-metric-label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+
+        /* Target Reticle Tracking View Finder */
+        .targeting-zone {
+            background-color: #0d0d11;
+            border: 2px solid #222;
+            height: 120px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            position: relative;
+            cursor: crosshair;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reticle-indicator {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        .log-terminal {
+            background-color: #0a0a0c;
+            border: 2px dashed #444;
+            border-radius: 4px;
+            height: 100px;
+            padding: 15px;
+            overflow-y: auto;
+            font-size: 0.95rem;
+            text-align: left;
+            margin-bottom: 25px;
+            color: #4caf50;
+        }
+
+        /* --- Move Command Action Panel --- */
+        .action-panel h4 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .moves-button-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .ability-btn {
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
+            font-size: 0.85rem;
+            padding: 12px;
+            background-color: #2a2a35;
+            color: #fff;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .ability-btn:hover:not(:disabled) {
+            background-color: var(--primary);
+            color: #000;
+            border-color: #fff;
+        }
+
+        .ability-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* --- Global Utility system to hide items --- */
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation Links -->
+    <header>
+        <h1>U.A. SIMULATOR <span>BATTLEGROUND</span></h1>
+        <a href="./profile 2.html" class="back-btn">Exit Arena</a>
+    </header>
+
+    <div class="game-wrapper">
+
+        <!-- STAGE 1: CHARACTER SELECTION SCREEN (Shows First) -->
+        <div id="screen-select" class="selection-screen">
+            <h2 class="section-headline">CHOOSE YOUR COMBATANT</h2>
+            
+            <div class="char-cluster-title">U.A. High Heroes</div>
+            <div class="selector-grid">
+                <button class="char-select-btn" onclick="pickCharacter('Deku', '🟢')">🟢 Deku</button>
+                <button class="char-select-btn" onclick="pickCharacter('Bakugo', '💥')">💥 Bakugo</button>
+                <button class="char-select-btn" onclick="pickCharacter('Shoto', '❄️🔥')">❄️🔥 Shoto</button>
+                <button class="char-select-btn" onclick="pickCharacter('Endeavour', '🔥')">🔥 Endeavour</button>
+                <button class="char-select-btn" onclick="pickCharacter('Hawks', '🪶')">🪶 Hawks</button>
+            </div>
+
+            <div class="char-cluster-title">League of Villains</div>
+            <div class="selector-grid">
+                <button class="char-select-btn" onclick="pickCharacter('Shigaraki', '🖐️')">🖐️ Shigaraki</button>
+                <button class="char-select-btn" onclick="pickCharacter('Dabi', '💙')">💙 Dabi</button>
+                <button class="char-select-btn" onclick="pickCharacter('Toga', '💉')">💉 Toga</button>
+                <button class="char-select-btn" onclick="pickCharacter('Overhaul', '😷')">😷 Overhaul</button>
+                <button class="char-select-btn" onclick="pickCharacter('Twice', '🎭')">🎭 Twice</button>
+            </div>
+            <h1>Game in progress</h1>
+        </div>
+
+        <!-- STAGE 2: FIGHT ARENA (Hidden until character is chosen, then opens instantly) -->
+        <div id="screen-arena" class="battle-arena hidden">
+            <h2 id="arena-banner" class="arena-header">ROUND 1: CORE FIGHT</h2>
+
+            <div class="combat-grid">
+                <!-- Left Side: Loaded Fighter -->
+                <div class="fighter-card" style="border-color: var(--primary);">
